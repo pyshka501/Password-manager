@@ -7,7 +7,7 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 import sqlite3 as sq
 
-#pip install pycryptodomex
+# pip install pycryptodomex
 
 colour_for_yes_no = "#dedede"  # dbdbdb
 main_colour = "#d4d4d4"  # e0e0e0
@@ -35,20 +35,20 @@ row_id = 0
 with sq.connect("saper_log.db") as con:
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS users_pass (
-        cipher_text TEXT,
-        salt TEXT,
-        nonce TEXT,
-        tag TEXT
-        )""")
+               cipher_text TEXT,
+               salt TEXT,
+               nonce TEXT,
+               tag TEXT
+               )""")
 
 with sq.connect("saper_log.db") as con:
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS users_reg (
-        cipher_text TEXT,
-        salt TEXT,
-        nonce TEXT,
-        tag TEXT
-        )""")
+               cipher_text TEXT,
+               salt TEXT,
+               nonce TEXT,
+               tag TEXT
+               )""")
 
 with open('test.txt', 'w') as f:
     f.write('')
@@ -114,11 +114,11 @@ def wr_in_db(web, log, pas):
     with sq.connect("saper_log.db") as con:
         cur = con.cursor()
         cur.execute("""CREATE TABLE IF NOT EXISTS users_pass (
-            cipher_text TEXT,
-            salt TEXT,
-            nonce TEXT,
-            tag TEXT
-            )""")
+                   cipher_text TEXT,
+                   salt TEXT,
+                   nonce TEXT,
+                   tag TEXT
+                   )""")
         x = encrypt(f"Name of website: {web}, login: {log}, password: {pas}", key_enc)
 
         cur = con.cursor()
@@ -207,12 +207,12 @@ def save_reg(log, pas):  # сохраняем пароль и логин в ба
         with sq.connect("saper_log.db") as con:
             cur = con.cursor()
             cur.execute("DELETE FROM users_reg")
-            cur.execute("""CREATE TABLE IF NOT EXISTS users_reg (
-                cipher_text TEXT,
-                salt TEXT,
-                nonce TEXT,
-                tag TEXT
-                )""")
+            cur.execute("CREATE TABLE IF NOT EXISTS users_reg (\n"
+                        "                       cipher_text TEXT,\n"
+                        "                       salt TEXT,\n"
+                        "                       nonce TEXT,\n"
+                        "                       tag TEXT\n"
+                        "                       )")
             cur.execute(
                 f"INSERT INTO users_reg VALUES('{string_en['cipher_text']}','{string_en['salt']}','{string_en['nonce']}','{string_en['tag']}')")
         taking_data_reg()
@@ -902,8 +902,11 @@ def wp():
                 a = lines[i]
                 if len(a) > len(ml):
                     ml = a
-
-            list_of_passwords = Listbox(height=len(lines) + 1, width=len(ml), font=font_for_all, bg=colour_for_entry)
+                if len(lines) + 1 >  10:
+                    h_m = 10
+                else:
+                    h_m = len(lines) + 1
+            list_of_passwords = Listbox(height=h_m, width=len(ml), font=font_for_all, bg=colour_for_entry)
 
             # try:
             if not lines:
@@ -987,12 +990,15 @@ def account_login(window):  # входим в аккаунт
     bt_back.grid(row=5, column=0, sticky='wens', columnspan=2)
 
     def passing_login():
+        check_messagebox = 1
         lo = login_log.get()
         pa = log_pas.get()
         counter = 1
         if not lo or not pa:
             counter = 0
+            check_messagebox = 0
             messagebox.showerror("!!!", " You can't use symbols or letters or nothing!!!")
+
         p_check = str(lo) + str(pa)
 
         with sq.connect("saper_log.db") as con:
@@ -1012,7 +1018,7 @@ def account_login(window):  # входим в аккаунт
             a = decrypt(dict_f, key_enc)
             if a == p_check:
                 first_choice()
-            else:
+            elif check_messagebox != 0:
                 messagebox.showerror("Error", "Wrong password!")
 
 
@@ -1041,11 +1047,11 @@ def registration(window):
     with sq.connect("saper_log.db") as con:
         cur = con.cursor()
         cur.execute("""CREATE TABLE IF NOT EXISTS users_reg (
-            cipher_text TEXT,
-            salt TEXT,
-            nonce TEXT,
-            tag TEXT
-            )""")
+                   cipher_text TEXT,
+                   salt TEXT,
+                   nonce TEXT,
+                   tag TEXT
+                   )""")
 
     # Регистрация
 
