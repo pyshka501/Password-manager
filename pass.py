@@ -7,7 +7,7 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Random import get_random_bytes
 import sqlite3 as sq
 
-
+#pip install pycryptodomex
 
 colour_for_yes_no = "#dedede"  # dbdbdb
 main_colour = "#d4d4d4"  # e0e0e0
@@ -35,7 +35,6 @@ row_id = 0
 with sq.connect("saper_log.db") as con:
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS users_pass (
-
         cipher_text TEXT,
         salt TEXT,
         nonce TEXT,
@@ -45,7 +44,6 @@ with sq.connect("saper_log.db") as con:
 with sq.connect("saper_log.db") as con:
     cur = con.cursor()
     cur.execute("""CREATE TABLE IF NOT EXISTS users_reg (
-
         cipher_text TEXT,
         salt TEXT,
         nonce TEXT,
@@ -78,8 +76,6 @@ def encrypt(plain_text, password):
     if fl != [(None,)]:
         row_id = fl[0][0] + 1
 
-
-
     # return a dictionary with the encrypted text
     cipher_text, tag = cipher_config.encrypt_and_digest(bytes(plain_text, 'utf-8'))
     return {
@@ -87,7 +83,7 @@ def encrypt(plain_text, password):
         'salt': b64encode(salt).decode('utf-8'),
         'nonce': b64encode(cipher_config.nonce).decode('utf-8'),
         'tag': b64encode(tag).decode('utf-8'),
-        'row_id' : row_id
+        'row_id': row_id
     }
 
 
@@ -100,7 +96,6 @@ def decrypt(enc_dict, key_enc):
     tag = b64decode(enc_dict['tag'])
     if 'row_id' in enc_dict:
         row_id = enc_dict['row_id']
-
 
     # generate the private key from the password and salt
     private_key = hashlib.scrypt(key_enc.encode(), salt=salt, n=2 ** 14, r=8, p=1, dklen=32)
@@ -119,7 +114,6 @@ def wr_in_db(web, log, pas):
     with sq.connect("saper_log.db") as con:
         cur = con.cursor()
         cur.execute("""CREATE TABLE IF NOT EXISTS users_pass (
-
             cipher_text TEXT,
             salt TEXT,
             nonce TEXT,
@@ -154,7 +148,6 @@ def taking_data():
                 decrypted = decrypt(enc_dict, key_enc)
                 cur.execute(f"SELECT rowid FROM users_pass WHERE cipher_text = '{fl[i][0]}' ")
                 enc_dict['row_id'] = cur.fetchall()
-
 
                 with open('test.txt', 'a+') as f:  # записываем в файл уже дешифр
                     finished_line = decrypted + '\n'
@@ -223,7 +216,7 @@ def save_reg(log, pas):  # сохраняем пароль и логин в ба
             cur.execute(
                 f"INSERT INTO users_reg VALUES('{string_en['cipher_text']}','{string_en['salt']}','{string_en['nonce']}','{string_en['tag']}')")
         taking_data_reg()
-        messagebox.showinfo("","You have been registered")
+        messagebox.showinfo("", "You have been registered")
         first_choice()
 
 
@@ -267,7 +260,7 @@ def generation_pass():
             text.grid(row=0, column=0, sticky='wens')
 
             Label(font=font_for_all, text=' - your generated password', bg=main_colour, height=1).grid(row=0, column=1,
-                                                                                             sticky='wens')
+                                                                                                       sticky='wens')
 
         try:
             gener(l)
@@ -290,16 +283,20 @@ def wp():
         row=0, column=0, columnspan=2, sticky='wens')
     bt_ap = Button(font=font_for_all, bg=colour_for_back, text="Add password", width=26, command=lambda: add_password())
     bt_ap.grid(row=1, column=0, sticky='wens')
-    bt_pp = Button(font=font_for_all, bg=colour_for_back, text="Print passwords", width=26, command=lambda: print_password())
+    bt_pp = Button(font=font_for_all, bg=colour_for_back, text="Print passwords", width=26,
+                   command=lambda: print_password())
     bt_pp.grid(row=3, column=0, sticky='wens')
-    bt_cp = Button(font=font_for_all, bg=colour_for_back, text="Clear list of passwords", width=26, command=lambda: clear_password())
+    bt_cp = Button(font=font_for_all, bg=colour_for_back, text="Clear list of passwords", width=26,
+                   command=lambda: clear_password())
     bt_cp.grid(row=1, column=1, sticky='wens')
-    bt_chp = Button(font=font_for_all, bg=colour_for_back, text="Change one of the passwords", width=26, command=lambda: change_pass())
+    bt_chp = Button(font=font_for_all, bg=colour_for_back, text="Change one of the passwords", width=26,
+                    command=lambda: change_pass())
     bt_chp.grid(row=2, column=0, sticky='wens')
-    bt_dop = Button(font=font_for_all, bg=colour_for_back, text="Delete one of the passwords", width=26, command=lambda: delete_one_pass())
+    bt_dop = Button(font=font_for_all, bg=colour_for_back, text="Delete one of the passwords", width=26,
+                    command=lambda: delete_one_pass())
     bt_dop.grid(row=2, column=1, sticky='wens')
 
-    bt_back = Button(font=font_for_all, bg=colour_for_back ,text="Back", width=26, command=lambda: first_choice())
+    bt_back = Button(font=font_for_all, bg=colour_for_back, text="Back", width=26, command=lambda: first_choice())
     bt_back.grid(row=3, column=1, sticky='wens')
 
     def change_pass():
@@ -324,7 +321,7 @@ def wp():
 
             if cs == "":
                 messagebox.showerror("!!!", "Fill in the field")
-                delete_one_pass()
+                change_pass()
 
             elif cs != "":
                 delete_site = cs
@@ -345,10 +342,11 @@ def wp():
                     except ValueError:
                         messagebox.showerror('!!!', 'There is not at least one password!')
                         clear()
-                        Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0,
-                                                                                                           column=0,
-                                                                                                           columnspan=2,
-                                                                                                           sticky='wens')
+                        Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(
+                            row=0,
+                            column=0,
+                            columnspan=2,
+                            sticky='wens')
                         Button(font=font_for_all, text="Yes", command=lambda: add_password()).grid(row=1, column=1,
                                                                                                    sticky='wens',
                                                                                                    bg=colour_for_yes_no)
@@ -360,14 +358,17 @@ def wp():
                     with open('test.txt', "w") as f:
                         f.write('')
                     messagebox.showinfo("", "There is not at least one password.")
-                    Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0, column=0,
-                                                                                                       columnspan=2,
-                                                                                                       sticky='wens')
+                    Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0,
+                                                                                                                 column=0,
+                                                                                                                 columnspan=2,
+                                                                                                                 sticky='wens')
                     Button(font=font_for_all, text="Yes", command=lambda: add_password(), bg=colour_for_yes_no).grid(
                         row=1,
                         column=1,
                         sticky='wens')
-                    Button(font=font_for_all, text="No", command=lambda: wp(), bg=colour_for_yes_no).grid(row=1, column=0, sticky='wens')
+                    Button(font=font_for_all, text="No", command=lambda: wp(), bg=colour_for_yes_no).grid(row=1,
+                                                                                                          column=0,
+                                                                                                          sticky='wens')
                 elif lines != [] and con_site == 1:
                     clear()
                     Label(font=font_for_all, text="Enter login of this password", bg=main_colour).grid(
@@ -377,7 +378,8 @@ def wp():
                     d_login = Entry(root_acc, bg=colour_for_entry, font=font_for_all)
                     d_login.grid(row=1, column=2, sticky='wens')
 
-                    bt_ent = Button(font=font_for_all, bg=colour_for_back, text="Enter", width=23, command=lambda: d_log_final())
+                    bt_ent = Button(font=font_for_all, bg=colour_for_back, text="Enter", width=23,
+                                    command=lambda: d_log_final())
                     bt_ent.grid(row=2, column=2, sticky='wens')
                     bt_back = Button(font=font_for_all, text="Back", width=23, command=lambda: change_pass(),
                                      bg=colour_for_back)
@@ -424,7 +426,7 @@ def wp():
                                 x = int(common_part[0]) + 1
                                 new_f = lines[:int(common_part[0])] + lines[x:]
                                 for i in range(len(new_f)):
-                                    new_f[i] = new_f[i].replace("\n",'')
+                                    new_f[i] = new_f[i].replace("\n", '')
 
                                 list_of_pass = []
                                 for i in range(len(new_f)):
@@ -451,7 +453,7 @@ def wp():
                             elif int(common_part[0]) == 0:
                                 new_f = lines[1:]
                                 for i in range(len(new_f)):
-                                    new_f[i] = new_f[i].replace("\n",'')
+                                    new_f[i] = new_f[i].replace("\n", '')
                                 list_of_pass = []
                                 for i in range(len(new_f)):
                                     a = encrypt(new_f[i], key_enc)
@@ -475,7 +477,7 @@ def wp():
                             elif int(common_part[0]) == counter_lines:
                                 new_f = lines[:int(common_part[0])]
                                 for i in range(len(new_f)):
-                                    new_f[i] = new_f[i].replace("\n",'')
+                                    new_f[i] = new_f[i].replace("\n", '')
                                 list_of_pass = []
                                 for i in range(len(new_f)):
                                     a = encrypt(new_f[i], key_enc)
@@ -510,13 +512,17 @@ def wp():
                 elif con_site == 0:
                     messagebox.showerror("!!!", "There is no this site")
                     clear()
-                    Label(font=font_for_all, text="Do You want to add password for this site?", bg=main_colour, height=2).grid(
+                    Label(font=font_for_all, text="Do You want to add password for this site?", bg=main_colour,
+                          height=2).grid(
                         row=0, column=0,
                         columnspan=2,
                         sticky='wens')
-                    Button(font=font_for_all, text="Yes", command=lambda: add_password(), bg=colour_for_yes_no).grid(row=1, column=1,
-                                                                                               sticky='wens')
-                    Button(font=font_for_all, text="No", command=lambda: wp(), bg=colour_for_yes_no).grid(row=1, column=0, sticky='wens')
+                    Button(font=font_for_all, text="Yes", command=lambda: add_password(), bg=colour_for_yes_no).grid(
+                        row=1, column=1,
+                        sticky='wens')
+                    Button(font=font_for_all, text="No", command=lambda: wp(), bg=colour_for_yes_no).grid(row=1,
+                                                                                                          column=0,
+                                                                                                          sticky='wens')
                 else:
                     print('Error')
             else:
@@ -535,22 +541,20 @@ def wp():
 
                 clear()
 
-
-
-                Label(font=font_for_all, text="Website: ", bg=main_colour).grid(row=1, column=0, sticky='wens')
+                Label(font=font_for_all, text="Website: ", bg=main_colour).grid(row=1, column=0, sticky='')
                 ent_site = Entry(root_acc, bg=colour_for_entry, font=font_for_all)
-                ent_site.grid(row=1, column=1, sticky='wens')
-                Label(font=font_for_all, text="Login: ", bg=main_colour).grid(row=2, column=0, sticky='wens')
+                ent_site.grid(row=1, column=1, sticky='')
+                Label(font=font_for_all, text="Login: ", bg=main_colour).grid(row=2, column=0, sticky='')
                 ent_login = Entry(root_acc, bg=colour_for_entry, font=font_for_all)
-                ent_login.grid(row=2, column=1, sticky='wens')
-                Label(font=font_for_all, text="Password: ", bg=main_colour).grid(row=3, column=0, sticky='wens')
+                ent_login.grid(row=2, column=1, sticky='')
+                Label(font=font_for_all, text="Password: ", bg=main_colour).grid(row=3, column=0, sticky='')
                 ent_password = Entry(root_acc, bg=colour_for_entry, font=font_for_all)
-                ent_password.grid(row=3, column=1, sticky='wens')
-                bt_back = Button(font=font_for_all, text="Back", width=49, command=lambda: wp(), bg=colour_for_back)
-                bt_back.grid(row=4, column=0, sticky='wens')
-                bt_ent = Button(font=font_for_all, bg=colour_for_back,text="Enter", width=50,
+                ent_password.grid(row=3, column=1, sticky='')
+                bt_back = Button(font=font_for_all, text="Back", command=lambda: wp(), bg=colour_for_back)
+                bt_back.grid(row=4, column=0, sticky='wnse')
+                bt_ent = Button(font=font_for_all, bg=colour_for_back, text="Enter",
                                 command=lambda: writing(ent_site.get(), ent_login.get(), ent_password.get()))
-                bt_ent.grid(row=4, column=1, sticky='wens')
+                bt_ent.grid(row=4, column=1, sticky='wnse')
 
             adding1()
 
@@ -632,10 +636,11 @@ def wp():
                     except ValueError:
                         clear()
                         messagebox.showinfo("", "There is not at least one password.")
-                        Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0,
-                                                                                                           column=0,
-                                                                                                           columnspan=2,
-                                                                                                           sticky='wens')
+                        Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(
+                            row=0,
+                            column=0,
+                            columnspan=2,
+                            sticky='wens')
                         Button(font=font_for_all, text="Yes", command=lambda: add_password()).grid(row=1, column=1,
                                                                                                    sticky='wens',
                                                                                                    bg=colour_for_yes_no)
@@ -657,7 +662,8 @@ def wp():
                     d_login = Entry(root_acc, bg=colour_for_entry, font=font_for_all)
                     d_login.grid(row=1, column=2, sticky='wens')
 
-                    bt_ent = Button(font=font_for_all, text="Enter", width=23, command=lambda: d_log_final(), bg=colour_for_back)
+                    bt_ent = Button(font=font_for_all, text="Enter", width=23, command=lambda: d_log_final(),
+                                    bg=colour_for_back)
                     bt_ent.grid(row=2, column=2, sticky='wens')
                     bt_back = Button(font=font_for_all, text="Back", width=23, command=lambda: wp(), bg=colour_for_back)
                     bt_back.grid(row=2, column=1, sticky='wens')
@@ -704,7 +710,7 @@ def wp():
                                 new_f = lines[:int(common_part[0])] + lines[x:]
 
                                 for i in range(len(new_f)):
-                                    new_f[i] = new_f[i].replace("\n",'')
+                                    new_f[i] = new_f[i].replace("\n", '')
 
                                 list_of_pass = []
                                 for i in range(len(new_f)):
@@ -733,7 +739,7 @@ def wp():
                                 new_f = lines[1:]
 
                                 for i in range(len(new_f)):
-                                    new_f[i] = new_f[i].replace("\n",'')
+                                    new_f[i] = new_f[i].replace("\n", '')
 
                                 list_of_pass = []
                                 for i in range(len(new_f)):
@@ -763,7 +769,7 @@ def wp():
                             elif int(common_part[0]) == counter_lines:
                                 new_f = lines[:int(common_part[0])]
                                 for i in range(len(new_f)):
-                                    new_f[i] = new_f[i].replace("\n",'')
+                                    new_f[i] = new_f[i].replace("\n", '')
 
                                 list_of_pass = []
                                 for i in range(len(new_f)):
@@ -834,9 +840,9 @@ def wp():
                 bt_back = Button(font=font_for_all, text="Back", command=lambda: wp(), bg=colour_for_back)
                 bt_back.grid(row=3, column=0, sticky='wens')
                 bt_ent = Button(font=font_for_all, text="Enter",
-                                command=lambda: writing(ent_site.get(), ent_login.get(), ent_password.get()), bg=colour_for_back)
+                                command=lambda: writing(ent_site.get(), ent_login.get(), ent_password.get()),
+                                bg=colour_for_back)
                 bt_ent.grid(row=3, column=1, sticky='wens')
-
 
             def writing(web, log, pas):
 
@@ -897,18 +903,21 @@ def wp():
                 if len(a) > len(ml):
                     ml = a
 
-            list_of_passwords = Listbox(height=len(lines)+1, width=len(ml), font=font_for_all, bg=colour_for_entry)
+            list_of_passwords = Listbox(height=len(lines) + 1, width=len(ml), font=font_for_all, bg=colour_for_entry)
 
             # try:
             if not lines:
                 messagebox.showinfo("", "There is not at least one password.")
-                Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0, column=0,
-                                                                                                   columnspan=2,
-                                                                                                   sticky='wens')
-                Button(font=font_for_all, text="Yes", command=lambda: add_password(), bg=colour_for_yes_no).grid(row=1, column=1,
-                                                                                           sticky='wens')
-                Button(font=font_for_all, bg=colour_for_yes_no, text="No", command=lambda: first_choice()).grid(row=1, column=0,
-                                                                                          sticky='wens')
+                Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0,
+                                                                                                             column=0,
+                                                                                                             columnspan=2,
+                                                                                                             sticky='wens')
+                Button(font=font_for_all, text="Yes", command=lambda: add_password(), bg=colour_for_yes_no).grid(row=1,
+                                                                                                                 column=1,
+                                                                                                                 sticky='wens')
+                Button(font=font_for_all, bg=colour_for_yes_no, text="No", command=lambda: first_choice()).grid(row=1,
+                                                                                                                column=0,
+                                                                                                                sticky='wens')
 
             else:
                 s = " " * (len(ml) // 2)
@@ -949,9 +958,9 @@ def first_choice():
 
     Label(font=font_for_all, text="Choose action: generate password or work with the list of passwords.",
           bg=main_colour, height=2).grid(row=0,
-                               column=0,
-                               columnspan=2,
-                               sticky='wens')
+                                         column=0,
+                                         columnspan=2,
+                                         sticky='wens')
     bt_gp = Button(font=font_for_all, bg=colour_for_back, text="Generate password", command=lambda: generation_pass())
     bt_gp.grid(row=1, column=0, sticky='wens')
     bt_wp = Button(font=font_for_all, bg=colour_for_back, text="Work with the list of passwords", command=lambda: wp())
@@ -1011,10 +1020,11 @@ def do_u_want_regis(window):
     clear()  # очищение
 
     # asking
-    Label(font=font_for_all, text="Do You want to register?(It deletes all data!)", bg=main_colour, height=2).grid(row=0,
-                                                                                                         column=0,
-                                                                                                         sticky='wens',
-                                                                                                         columnspan=2)
+    Label(font=font_for_all, text="Do You want to register?(It deletes all data!)", bg=main_colour, height=2).grid(
+        row=0,
+        column=0,
+        sticky='wens',
+        columnspan=2)
     bt_yes_reg = Button(font=font_for_all, text="Yes", command=lambda: registration(root_acc), bg=colour_for_yes_no)
     bt_yes_reg.grid(row=1, column=1, sticky='wens')
     bt_no_reg = Button(font=font_for_all, text="No", command=lambda: window.destroy(), bg=colour_for_yes_no)
@@ -1031,7 +1041,6 @@ def registration(window):
     with sq.connect("saper_log.db") as con:
         cur = con.cursor()
         cur.execute("""CREATE TABLE IF NOT EXISTS users_reg (
-
             cipher_text TEXT,
             salt TEXT,
             nonce TEXT,
@@ -1052,7 +1061,7 @@ def registration(window):
     regis_pas2.grid(row=3, column=1, sticky='wens')
     bt_back = Button(font=font_for_all, text="Back", command=lambda: do_u_have_account(), bg=colour_for_back)
     bt_back.grid(row=4, column=0, sticky='wens')
-    bt_reg = Button(font=font_for_all, text="Register", command=lambda: checking(),bg=colour_for_back)
+    bt_reg = Button(font=font_for_all, text="Register", command=lambda: checking(), bg=colour_for_back)
     bt_reg.grid(row=4, column=1, sticky='wens')
 
     def checking():
@@ -1071,7 +1080,7 @@ def do_u_have_account():  # спрашиваем есть ли акк
     clear()  # очищение
     location()
 
-    text1 = Label(font=font_for_all, text="Do you have account?", height=2, bg=main_colour)
+    text1 = Label(font=font_for_all, text="Do you have an account?", height=2, bg=main_colour)
     text1.grid(row=0, column=0, columnspan=2, sticky='wens')
     bt_yes = Button(font=font_for_all, text="Yes", command=lambda: account_login(root_acc), bg=colour_for_yes_no)
     bt_yes.grid(row=1, column=1, sticky='wens')
@@ -1084,13 +1093,14 @@ def do_u_have_account():  # спрашиваем есть ли акк
 
 root_acc = Tk()
 
-
 root_acc.geometry("+-100+-10000000")
 try:
     root_acc.iconbitmap('lock.ico')
 except:
     pass
 root_acc.config(bg=main_colour)
+
+
 # C = Canvas(root_acc, bg="black", height=250, width=300)
 # filename = PhotoImage(file ='matrix.png')
 # background_label = Label(root_acc, image=filename)
@@ -1099,15 +1109,15 @@ root_acc.config(bg=main_colour)
 #
 
 def location():
-    wid = int((root_acc.winfo_screenwidth())//3)
-    heig =int((root_acc.winfo_screenheight())//3)
+    wid = int((root_acc.winfo_screenwidth()) // 3)
+    heig = int((root_acc.winfo_screenheight()) // 3)
     if wid >= 480 or heig >= 480:
         root_acc.geometry(f"+{wid}+{heig}")
+
 
 root_acc.resizable(False, False)
 root_acc.title("Password manager")
 
 do_u_have_account()
-
 
 root_acc.mainloop()
