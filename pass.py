@@ -216,7 +216,7 @@ def save_reg(log, pas):  # сохраняем пароль и логин в ба
             cur.execute(
                 f"INSERT INTO users_reg VALUES('{string_en['cipher_text']}','{string_en['salt']}','{string_en['nonce']}','{string_en['tag']}')")
         taking_data_reg()
-        messagebox.showinfo("", "You have been registered")
+        messagebox.showinfo("", "You have been signed up")
         first_choice()
 
 
@@ -224,7 +224,7 @@ def save_reg(log, pas):  # сохраняем пароль и логин в ба
 def generation_pass():
     clear()  # очищение
 
-    Label(font=font_for_all, text="Enter length of your needed password(max 15).", bg=main_colour, height=2).grid(row=0,
+    Label(font=font_for_all, text="Enter required length (max 15 characters).", bg=main_colour, height=2).grid(row=0,
                                                                                                                   column=0,
                                                                                                                   columnspan=2,
                                                                                                                   sticky='wens')
@@ -269,7 +269,7 @@ def generation_pass():
                                                                                                             sticky='wens')
 
         except:
-            messagebox.showinfo("!!!", """You can not use symbols or letters or nothing!!!""")
+            messagebox.showinfo("ValueError", """Length must be an integer value""")
             generation_pass()
 
 
@@ -278,7 +278,7 @@ def wp():
 
     # y = bt_chp.winfo_height()   width=26
 
-    Label(font=font_for_all, text="Choose action: print list of passwords, add passwords and clear list up.",
+    Label(font=font_for_all, text="Choose action:",
           bg=main_colour, height=2).grid(
         row=0, column=0, columnspan=2, sticky='wens')
     bt_ap = Button(font=font_for_all, bg=colour_for_back, text="Add password", width=26, command=lambda: add_password())
@@ -320,7 +320,7 @@ def wp():
             counter_site = []
 
             if cs == "":
-                messagebox.showerror("!!!", "Fill in the field")
+                messagebox.showerror("ValueError", "Fill in the field")
                 change_pass()
 
             elif cs != "":
@@ -340,9 +340,9 @@ def wp():
                             con_site = 1
                             counter_site.append(i)
                     except ValueError:
-                        messagebox.showerror('!!!', 'There is not at least one password!')
+                        messagebox.showerror('ValueError', 'There are no passwords')
                         clear()
-                        Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(
+                        Label(font=font_for_all, text="Do you want to add password?", bg=main_colour, height=2).grid(
                             row=0,
                             column=0,
                             columnspan=2,
@@ -357,8 +357,8 @@ def wp():
                     clear()
                     with open('test.txt', "w") as f:
                         f.write('')
-                    messagebox.showinfo("", "There is not at least one password.")
-                    Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0,
+                    messagebox.showinfo("", "There are no passwords")
+                    Label(font=font_for_all, text="Do you want to add password?", bg=main_colour, height=2).grid(row=0,
                                                                                                                  column=0,
                                                                                                                  columnspan=2,
                                                                                                                  sticky='wens')
@@ -389,7 +389,7 @@ def wp():
 
                         log_for_delet = d_login.get()
                         if log_for_delet == "":
-                            messagebox.showerror("!!!", "Fill in the field")
+                            messagebox.showerror("ValueError", "Fill in the field")
                             getting_d_pass()
                         taking_data()
                         with open('test.txt') as f:
@@ -410,7 +410,7 @@ def wp():
                         if con_log == 1:
                             common_part = list(set(counter_log) & set(counter_site))
                             if not common_part:
-                                messagebox.showerror("!!!", "Check the correctness of the entered data")
+                                messagebox.showerror("ValueError", "Check the correctness of the entered data")
                                 wp()
 
                             counter_lines = 0
@@ -505,14 +505,14 @@ def wp():
 
 
                         elif con_log == 0:
-                            messagebox.showerror("!!!", "There is no this login for that site")
+                            messagebox.showerror("ValueError", "There is no this login for that site")
                             wp()
                         else:
                             print('Error')
                 elif con_site == 0:
-                    messagebox.showerror("!!!", "There is no this site")
+                    messagebox.showerror("ValueError", "There is no this site")
                     clear()
-                    Label(font=font_for_all, text="Do You want to add password for this site?", bg=main_colour,
+                    Label(font=font_for_all, text="Do you want to add password for this site?", bg=main_colour,
                           height=2).grid(
                         row=0, column=0,
                         columnspan=2,
@@ -560,15 +560,15 @@ def wp():
 
             def writing(web, log, pas):
                 if web == '':
-                    messagebox.showerror("!!!", "Fill in all the fields")
+                    messagebox.showerror("ValueError", "Fill in all the fields")
                     adding1()
 
                 elif log == '':
-                    messagebox.showerror("!!!", "Fill in all the fields")
+                    messagebox.showerror("ValueError", "Fill in all the fields")
                     adding1()
 
                 elif pas == '':
-                    messagebox.showerror("!!!", "Fill in all the fields")
+                    messagebox.showerror("ValueError", "Fill in all the fields")
                     adding1()
 
                 else:
@@ -583,7 +583,7 @@ def wp():
                             line = lines[i][:in_pass]
 
                             if web + ',' in str(line.split()[3]) and log + ',' in str(line.split()[5]):
-                                messagebox.showerror("!!!", 'This data is already there!')
+                                messagebox.showerror("ValueError", 'This data is already there!')
                                 wp()
                                 break
                         else:
@@ -613,7 +613,7 @@ def wp():
             counter_site = []
 
             if d_site.get() == "":
-                messagebox.showerror("!!!", "Fill in the field")
+                messagebox.showerror("ValueError", "Fill in the field")
                 delete_one_pass()
 
             elif d_site.get() != "":
@@ -635,8 +635,8 @@ def wp():
 
                     except ValueError:
                         clear()
-                        messagebox.showinfo("", "There is not at least one password.")
-                        Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(
+                        messagebox.showinfo("", "There are no passwords")
+                        Label(font=font_for_all, text="Do you want to add password?", bg=main_colour, height=2).grid(
                             row=0,
                             column=0,
                             columnspan=2,
@@ -651,7 +651,7 @@ def wp():
                     clear()
                     with open('test.txt', "w") as f:
                         f.write('')
-                    messagebox.showinfo("", "There is not at least one password.")
+                    messagebox.showinfo("", "There are no passwords")
                     wp()
                 elif lines != [] and con_site == 1:
                     clear()
@@ -672,7 +672,7 @@ def wp():
 
                         log_for_delet = d_login.get()
                         if log_for_delet == "":
-                            messagebox.showerror("!!!", "Fill in the field")
+                            messagebox.showerror("ValueError", "Fill in the field")
                             getting_d_pass()
                         taking_data()
                         with open('test.txt') as f:
@@ -693,7 +693,7 @@ def wp():
                         if con_log == 1:
                             common_part = list(set(counter_log) & set(counter_site))
                             if not common_part:
-                                messagebox.showerror("!!!", "Check the correctness of the entered data")
+                                messagebox.showerror("ValueError", "Check the correctness of the entered data")
                                 wp()
 
                             counter_lines = 0
@@ -799,12 +799,12 @@ def wp():
 
 
                         elif con_log == 0:
-                            messagebox.showerror("!!!", "There is no this login for that site")
+                            messagebox.showerror("ValueError", "There is no this login for that site")
                             wp()
                         else:
                             print('Error')
                 elif con_site == 0:
-                    messagebox.showerror("!!!", "There is no this site")
+                    messagebox.showerror("ValueError", "There is no this site")
                     clear()
                     wp()
                 else:
@@ -847,15 +847,15 @@ def wp():
             def writing(web, log, pas):
 
                 if web == '':
-                    messagebox.showerror("!!!", "Fill in all the fields")
+                    messagebox.showerror("ValueError", "Fill in all the fields")
                     add_password()
 
                 elif log == '':
-                    messagebox.showerror("!!!", "Fill in all the fields")
+                    messagebox.showerror("ValueError", "Fill in all the fields")
                     add_password()
 
                 elif pas == '':
-                    messagebox.showerror("!!!", "Fill in all the fields")
+                    messagebox.showerror("ValueError", "Fill in all the fields")
                     add_password()
 
                 else:
@@ -873,7 +873,7 @@ def wp():
                                 line = lines[i][:in_pass]
 
                                 if web + ',' in str(line.split()[3]) and log + ',' in str(line.split()[5]):
-                                    messagebox.showerror("!!!", 'This data is already there!')
+                                    messagebox.showerror("ValueError", 'This data is already there!')
                                     wp()
                                     check += 1
                                     break
@@ -883,7 +883,7 @@ def wp():
 
             adding()
         except:
-            messagebox.showinfo("!!!", """You can not use symbols or letters!!!""")
+            messagebox.showinfo("ValueError", """This value must be an interger""")
             add_password()
 
     def print_password():
@@ -896,6 +896,7 @@ def wp():
 
         with open('test.txt', "w") as f:
             f.write('')
+            h_m = 1
             ml = "The list of passwords:"
             for i in range(len(lines)):
 
@@ -910,8 +911,8 @@ def wp():
 
             # try:
             if not lines:
-                messagebox.showinfo("", "There is not at least one password.")
-                Label(font=font_for_all, text="Do You want to add password?", bg=main_colour, height=2).grid(row=0,
+                messagebox.showinfo("", "There are no passwords.")
+                Label(font=font_for_all, text="Do you want to add password?", bg=main_colour, height=2).grid(row=0,
                                                                                                              column=0,
                                                                                                              columnspan=2,
                                                                                                              sticky='wens')
@@ -959,7 +960,7 @@ def wp():
 def first_choice():
     clear()  # очищение
 
-    Label(font=font_for_all, text="Choose action: generate password or work with the list of passwords.",
+    Label(font=font_for_all, text="Choose action:",
           bg=main_colour, height=2).grid(row=0,
                                          column=0,
                                          columnspan=2,
@@ -1026,7 +1027,7 @@ def do_u_want_regis(window):
     clear()  # очищение
 
     # asking
-    Label(font=font_for_all, text="Do You want to register?(It deletes all data!)", bg=main_colour, height=2).grid(
+    Label(font=font_for_all, text="Do you want to sign up? All data will be lost!", bg=main_colour, height=2).grid(
         row=0,
         column=0,
         sticky='wens',
@@ -1055,19 +1056,19 @@ def registration(window):
 
     # Регистрация
 
-    Label(font=font_for_all, text="Please register", bg=main_colour).grid(row=0, column=0, columnspan=2, sticky='wens')
+    Label(font=font_for_all, text="Please sign up", bg=main_colour).grid(row=0, column=0, columnspan=2, sticky='wens')
     Label(font=font_for_all, text="Login: ", bg=main_colour).grid(row=1, column=0, sticky='wens')
     regis_log = Entry(window, bg=colour_for_entry, font=font_for_all)
     regis_log.grid(row=1, column=1, sticky='wens')
-    Label(font=font_for_all, text="Enter password: ", bg=main_colour).grid(row=2, column=0, sticky='wens')
+    Label(font=font_for_all, text="Create a password: ", bg=main_colour).grid(row=2, column=0, sticky='wens')
     regis_pas = Entry(window, bg=colour_for_entry, font=font_for_all)
     regis_pas.grid(row=2, column=1, sticky='wens')
-    Label(font=font_for_all, text="Enter the password again: ", bg=main_colour).grid(row=3, column=0, sticky='wens')
+    Label(font=font_for_all, text="Confirm password: ", bg=main_colour).grid(row=3, column=0, sticky='wens')
     regis_pas2 = Entry(window, show="*", bg=colour_for_entry, font=font_for_all)
     regis_pas2.grid(row=3, column=1, sticky='wens')
     bt_back = Button(font=font_for_all, text="Back", command=lambda: do_u_have_account(), bg=colour_for_back)
     bt_back.grid(row=4, column=0, sticky='wens')
-    bt_reg = Button(font=font_for_all, text="Register", command=lambda: checking(), bg=colour_for_back)
+    bt_reg = Button(font=font_for_all, text="Sign up", command=lambda: checking(), bg=colour_for_back)
     bt_reg.grid(row=4, column=1, sticky='wens')
 
     def checking():
@@ -1099,7 +1100,7 @@ def do_u_have_account():  # спрашиваем есть ли акк
 
 root_acc = Tk()
 
-root_acc.geometry("+-100+-10000000")
+##root_acc.geometry("+-100+-10000000")
 try:
     root_acc.iconbitmap('lock.ico')
 except:
@@ -1122,8 +1123,8 @@ def location():
 
 
 root_acc.resizable(False, False)
-root_acc.title("Password manager")
-
+root_acc.title("Passman")
+location()
 do_u_have_account()
 
 root_acc.mainloop()
