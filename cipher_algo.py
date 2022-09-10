@@ -3,7 +3,7 @@ import random
 # int(input("length_salt: "))
 salt_lcla = []
 coeff_shift = 60000
-cipher_text = list(input("Text: "))
+cipher_text = list(input("Text: "))  #
 
 
 # } - max ord
@@ -11,13 +11,11 @@ cipher_text = list(input("Text: "))
 
 def gen_salt(cipher_text):
     length_salt = len(cipher_text)
+    print(length_salt)
     for i in range(length_salt):
-        salt_lcla.append(random.randint(2 ** 2, 2 ** 10))
+        salt_lcla.append(random.randint(2 ** 7, 2 ** 9))
     print(salt_lcla)
     return salt_lcla
-
-
-salt_lcla = [83, 171, 273, 377, 406, 524, 308, 125, 473, 996, 282, 631]
 
 
 def cipher(cipher_text, salt_lcla):
@@ -30,7 +28,7 @@ def cipher(cipher_text, salt_lcla):
     return [cihper_string, salt_lcla]
 
 
-a = cipher(cipher_text, salt_lcla) 
+a = cipher(cipher_text, gen_salt(cipher_text))
 
 
 def decipher(cihper_string_b, salt_lcla):
@@ -42,6 +40,6 @@ def decipher(cihper_string_b, salt_lcla):
         cihper_list[i] = chr(abs(((ord(cihper_list[i]) - coeff_shift) // len(cihper_list)) - salt_lcla[i]))
     cipher_text = "".join(cihper_list)
     print(cipher_text)
-    return cipher_text    
-    
-   decipher(a[0], a[1])
+
+
+decipher(a[0], a[1])
